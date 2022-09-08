@@ -1,12 +1,14 @@
 extends KinematicBody2D
 
+signal trail_cont
+
 export var WEIGHT = 40
 export var FAST_FALL = 50
 export var MAX_FALL = 1200
 export var SPEED = 700
 export var DASH_SPEED = 1200
 export var ACCEL = 90
-export var JUMP = 1400
+export var JUMP = 1300
 export var FRICTION = 1.2
 export var DASH_FRICTION = 1.04
 export var COLOR = Color("#e03c28")
@@ -21,13 +23,42 @@ var bonk_timer_y = 0
 var bonk_timer_x = 0
 var free_timer = 0
 var jump_buffer = 0
-var can_jump = true
+var jumps = 2
 var dashing = false
 var dash_buffer = 0
 var joy_dir = 0
 var last_dir = 1
 var trails = []
 var trail_amount = 7
+
+var TRAIL_CONT = null
+var VELOCITY = {
+	"SPEED": 0,
+	"ANGLE": 0
+}
+
+func spawn_trail():
+	if (TRAIL_CONT != null):
+		var sprite = $Sprite.duplicate(8)
+		TRAIL_CONT.add_child(sprite)
+		sprite.position = position
+		sprite.frame_coords = $Sprite.frame_coords
+		var fade = 0.35
+		var fade_time = 0.1
+		var tween = Tween.new()
+		sprite.add_child(tween)
+		tween.interpolate_property(sprite, "modulate", Color(1,1,1,fade), Color(1,1,1,0), fade_time, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		tween.start()
+		yield(get_tree().create_timer(fade_time), "timeout")
+		sprite.queue_free()
+
+func _ready():
+	material = material.duplicate(8)
+	connect("trail_cont", self, "_got_trail_cont")
+	GlobalVars.current_camera = $Camera
+
+func _got_trail_cont(trail_cont):
+	TRAIL_CONT = trail_cont
 
 func _process(_delta):
 	if (Input.is_action_just_pressed("R")):
@@ -59,28 +90,22 @@ func _process(_delta):
 	
 	#----------------------------------------#
 	
-#	var local_pos = (get_viewport_transform().origin+$Camera.get_camera_screen_center()-(Vector2(1280,720)/2))
-	var local_pos = position-(Vector2(40,40)-$Sprite.offset)
-#	text_image.fill(Color("#ffffff"))
-	
-	if (dashing):
-		trails.append({"x": $Sprite.frame_coords.x, "y": $Sprite.frame_coords.y, "flipped": $Sprite.flip_h, "pos": local_pos})
-		if (trails.size() > trail_amount+1):
-			trails.remove(0)
-	else: 
-		if (trails.size() > 0):
-			trails.remove(0)
+	if  (VELOCITY.SPEED > 1000):
+		spawn_trail()
 	
 	#----------------------------------------#
 	
 	material.set_shader_param("PLAYER_COLOR", COLOR)
+	material.set_shader_param("MOOD_COLOR", GlobalVars.mood_color)
 
 func _physics_process(_delta):
+	VELOCITY.SPEED = sqrt(pow(motion.x, 2)+pow(motion.y, 2))
+	VELOCITY.ANGLE = atan2(motion.y, motion.x)
 	grounded = (is_on_floor())
 	if (grounded):
 		free_timer = 0
 		ground_timer += 1
-		can_jump = true
+		jumps = 2
 	else:
 		ground_timer = 0
 		free_timer += 1
@@ -102,6 +127,8 @@ func _physics_process(_delta):
 		motion.y = 0
 	
 	if (!grounded):
+		if (jumps > 1):
+			jumps = 1
 		if (motion.y + WEIGHT > MAX_FALL):
 			motion.y = MAX_FALL
 		else:
@@ -139,10 +166,10 @@ func _physics_process(_delta):
 	if (jump_buffer > 0):
 		jump_buffer -= 1
 	
-	if (Input.is_action_just_pressed("JUMP") and can_jump):
+	if (Input.is_action_just_pressed("JUMP") and jumps > 0):
 		motion.y = -JUMP
 		jump_buffer = 7
-		can_jump = false
+		jumps -= 1
 	
 	if (Input.is_action_just_pressed("DASH") and grounded):
 		motion.x = (DASH_SPEED*last_dir)
@@ -172,14 +199,3 @@ func global_to_screen(vec2):
 		return camera_pos - vec2
 	else:
 		return null
-
-func _draw():
-	var i = 1
-	for trail in trails:
-		var fade = (0.35/trail_amount)*i
-		var local_pos  = (trail.pos)-get_transform().origin
-		var mul = 1
-		if (trail.flipped):
-			mul = -1
-		draw_texture_rect_region($Sprite.texture, Rect2(local_pos, Vector2(80*mul, 80)), Rect2(Vector2(80*trail.x,80*trail.y), Vector2(80, 80)), Color(fade,fade,fade))
-		i += 1

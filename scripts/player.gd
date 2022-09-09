@@ -41,7 +41,7 @@ func spawn_trail():
 	if (TRAIL_CONT != null):
 		var sprite = $Sprite.duplicate(8)
 		TRAIL_CONT.add_child(sprite)
-		sprite.position = position
+		sprite.position = (position+$Sprite.position)
 		sprite.frame_coords = $Sprite.frame_coords
 		var fade = 0.35
 		var fade_time = 0.1

@@ -112,7 +112,7 @@ tracks/0/keys = {
 }
 
 [sub_resource type="RectangleShape2D" id=8]
-extents = Vector2( 15, 15 )
+extents = Vector2( 20, 17.5 )
 
 [node name="Player" type="KinematicBody2D" groups=["Player"]]
 material = SubResource( 10 )
@@ -123,6 +123,7 @@ COLOR = Color( 0.00784314, 0.290196, 0.792157, 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
 use_parent_material = true
+position = Vector2( -5, 0 )
 texture = ExtResource( 1 )
 offset = Vector2( 0, -35 )
 hframes = 4
@@ -137,7 +138,7 @@ anims/jump_peak = SubResource( 7 )
 anims/run = SubResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 0, -15 )
+position = Vector2( 0, -17.5 )
 shape = SubResource( 8 )
 
 [node name="Camera" type="Camera2D" parent="."]

@@ -12,7 +12,7 @@ shader_param/MOOD_COLOR = Plane( 0, 0, 0, 1 )
 [node name="Node2D" type="Node2D"]
 material = SubResource( 1 )
 script = ExtResource( 3 )
-mood_color_override = Color( 0.0509804, 0.12549, 0.188235, 1 )
+mood_color_override = Color( 0.137255, 0.0901961, 0.0705882, 1 )
 
 [node name="Background" type="ColorRect" parent="."]
 margin_right = 1280.0
@@ -21,11 +21,7 @@ color = Color( 0, 0, 0, 1 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 80, 640 )
-COLOR = Color( 1, 0.509804, 0.807843, 1 )
-
-[node name="Player2" parent="." instance=ExtResource( 2 )]
-position = Vector2( 150, 640 )
-COLOR = Color( 1, 0, 0.34902, 1 )
+COLOR = Color( 0.00784314, 0.290196, 0.792157, 1 )
 
 [node name="TileMap" type="TileMap" parent="."]
 use_parent_material = true

@@ -21,7 +21,6 @@ color = Color( 0, 0, 0, 1 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 80, 640 )
-COLOR = Color( 0.00784314, 0.290196, 0.792157, 1 )
 
 [node name="TileMap" type="TileMap" parent="."]
 use_parent_material = true

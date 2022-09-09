@@ -103,10 +103,12 @@ func _physics_process(_delta):
 	VELOCITY.ANGLE = atan2(motion.y, motion.x)
 	grounded = (is_on_floor())
 	if (grounded):
+		jump_buffer = 5
 		free_timer = 0
 		ground_timer += 1
 		jumps = 2
 	else:
+		jump_buffer -= 1
 		ground_timer = 0
 		free_timer += 1
 	
@@ -123,11 +125,11 @@ func _physics_process(_delta):
 	else:
 		bonk_timer_x = 0
 	
-	if (ground_timer == 1 and jump_buffer == 0):
+	if (ground_timer == 1):
 		motion.y = 0
 	
 	if (!grounded):
-		if (jumps > 1):
+		if (jumps > 1 and jump_buffer == 0):
 			jumps = 1
 		if (motion.y + WEIGHT > MAX_FALL):
 			motion.y = MAX_FALL
@@ -163,12 +165,15 @@ func _physics_process(_delta):
 		else:
 			motion.x = 0
 	
-	if (jump_buffer > 0):
-		jump_buffer -= 1
+	if (jumps == 2):
+		COLOR = Color("e03c28")
+	elif (jumps == 1):
+		COLOR = Color("f68f37")
+	else:
+		COLOR = Color("ffe737")
 	
 	if (Input.is_action_just_pressed("JUMP") and jumps > 0):
 		motion.y = -JUMP
-		jump_buffer = 7
 		jumps -= 1
 	
 	if (Input.is_action_just_pressed("DASH") and grounded):

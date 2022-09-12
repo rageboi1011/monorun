@@ -3,7 +3,7 @@ extends Node2D
 export var mood_color_override = Color(0,0,0)
 
 func _ready():
-	GlobalVars.mood_color = mood_color_override
+#	GlobalVars.mood_color = mood_color_override
 	var players = get_tree().get_nodes_in_group("Player")
 	print(players)
 	for player in players:

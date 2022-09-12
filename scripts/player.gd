@@ -23,7 +23,8 @@ var bonk_timer_y = 0
 var bonk_timer_x = 0
 var free_timer = 0
 var jump_buffer = 0
-var jumps = 2
+var max_jumps = 1
+var jumps = max_jumps
 var dashing = false
 var dash_buffer = 0
 var joy_dir = 0
@@ -56,11 +57,19 @@ func _ready():
 	material = material.duplicate(8)
 	connect("trail_cont", self, "_got_trail_cont")
 	GlobalVars.current_camera = $Camera
+	if (!OS.is_debug_build()):
+		Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
+#		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 
 func _got_trail_cont(trail_cont):
 	TRAIL_CONT = trail_cont
 
 func _process(_delta):
+	var mouse_screen_pos = get_global_mouse_position()
+	var screen_pos = get_transform().get_origin()
+#	print("CAMERA: ", $Camera.get_camera_position())
+	$Sprite.flip_h = (mouse_screen_pos.x < screen_pos.x)
+	
 	if (Input.is_action_just_pressed("R")):
 		if (Input.is_action_pressed("L")):
 			joy_dir = -1
@@ -88,6 +97,7 @@ func _process(_delta):
 	if (joy_dir != 0):
 		last_dir = joy_dir
 	
+	
 	#----------------------------------------#
 	
 	if  (VELOCITY.SPEED > 1000):
@@ -106,7 +116,7 @@ func _physics_process(_delta):
 		jump_buffer = 5
 		free_timer = 0
 		ground_timer += 1
-		jumps = 2
+		jumps = max_jumps
 	else:
 		jump_buffer -= 1
 		ground_timer = 0
@@ -129,8 +139,8 @@ func _physics_process(_delta):
 		motion.y = 0
 	
 	if (!grounded):
-		if (jumps > 1 and jump_buffer == 0):
-			jumps = 1
+		if (jumps > max_jumps-1 and jump_buffer == 0):
+			jumps = max_jumps-1
 		if (motion.y + WEIGHT > MAX_FALL):
 			motion.y = MAX_FALL
 		else:
@@ -153,7 +163,7 @@ func _physics_process(_delta):
 			$Anim.play("run")
 			div = 1
 		motion.x += (ACCEL*joy_dir)/div
-		$Sprite.flip_h = (joy_dir == -1)
+#		$Sprite.flip_h = (joy_dir == -1)
 	else:
 		if (grounded):
 			$Anim.play("idle")
@@ -164,13 +174,6 @@ func _physics_process(_delta):
 			motion.x /= curr_fric
 		else:
 			motion.x = 0
-	
-	if (jumps == 2):
-		COLOR = Color("e03c28")
-	elif (jumps == 1):
-		COLOR = Color("f68f37")
-	else:
-		COLOR = Color("ffe737")
 	
 	if (Input.is_action_just_pressed("JUMP") and jumps > 0):
 		motion.y = -JUMP

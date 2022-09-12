@@ -15,6 +15,7 @@ func _ready():
 		TRAIL_CONT.use_parent_material = true
 		add_child_below_node($Label, PLAYER_CONT)
 	
+	add_line("Connecting...")
 	WsClient.connect_to_url("wss://MonorunSignalingServer.donovanedwards.repl.co")
 	WsClient.connect("ws_connect", self, "_ws_connected")
 	WsClient.connect("new_data", self, "_ws_data")

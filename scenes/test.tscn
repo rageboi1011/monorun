@@ -24,13 +24,13 @@ color = Color( 0, 0, 0, 1 )
 
 [node name="Terminal" type="Sprite" parent="."]
 use_parent_material = true
-position = Vector2( 660, 310 )
+position = Vector2( 640, 310 )
 texture = ExtResource( 7 )
 
 [node name="Label" type="Label" parent="."]
-margin_left = 265.0
+margin_left = 245.0
 margin_top = 90.0
-margin_right = 1055.0
+margin_right = 1035.0
 margin_bottom = 530.0
 custom_fonts/font = ExtResource( 6 )
 autowrap = true

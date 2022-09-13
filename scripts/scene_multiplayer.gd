@@ -8,7 +8,12 @@ const STATES = {
 var STATE = 0
 
 func _ready():
-	pass
+#	print(MonoBase.toDec("0vC5"))
+	print(MonoBase.fromHex("#FFFFFF"))
+	print(MonoBase.fromHex("024aca"))
+	print(MonoBase.fromHex("24aca"))
+#	print(MonoBase.fromDec(150218))
+#	print(MonoBase.toHex("0vC5"))
 
 func _process(_delta):
 	material.set_shader_param("MOOD_COLOR", GlobalVars.mood_color)

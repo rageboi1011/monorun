@@ -7,6 +7,9 @@ var client: WebSocketClient = WebSocketClient.new()
 var code = 1000
 var reason = "Unknown"
 
+# MY VARS
+var id = null
+
 signal lobby_joined(lobby)
 signal connected(id)
 signal disconnected()
@@ -55,6 +58,14 @@ func _connected(protocol = ""):
 func _parse_msg():
 	var pkt_str: String = client.get_peer(1).get_packet().get_string_from_utf8()
 	emit_signal("new_data", pkt_str)
+	var index = pkt_str.split(":")
+	var index_type = index[0]
+	index.remove(0)
+	var args = index.join(":")
+	match index_type:
+		"I":
+			id = args[0]
+			print("ID ==> ", id)
 
 
 func join_lobby(lobby):

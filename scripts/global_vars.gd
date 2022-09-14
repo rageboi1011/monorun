@@ -1,10 +1,23 @@
 extends Node
 
-export var mood_color =  Color("211640")
+const MOODS = [
+	"000000",
+	"151515",
+	"0d2030",
+	"231712",
+	"211640",
+	"172808",
+]
+
+export var mood_color =  Color(MOODS[0])
 var current_camera = null
 
 func _ready():
-	pass
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	var rand = rng.randi() % 6
+	print(rand)
+	mood_color = Color(MOODS[rand])
 
 func _process(delta):
 	pass

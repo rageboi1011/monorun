@@ -2,6 +2,8 @@ extends KinematicBody2D
 
 signal trail_cont
 
+export var type = 0
+
 export var WEIGHT = 40
 export var FAST_FALL = 50
 export var MAX_FALL = 1200
@@ -38,6 +40,8 @@ var VELOCITY = {
 	"ANGLE": 0
 }
 
+var Inputs = InputManager.new(type)
+
 func spawn_trail():
 	if (TRAIL_CONT != null):
 		var sprite = $Sprite.duplicate(8)
@@ -54,10 +58,12 @@ func spawn_trail():
 		sprite.queue_free()
 
 func _ready():
+	if (type == 0):
+		$Camera.current = true
+		GlobalVars.current_camera = $Camera
 	material = material.duplicate(8)
 	connect("trail_cont", self, "_got_trail_cont")
-	GlobalVars.current_camera = $Camera
-	if (!OS.is_debug_build()):
+	if (!OS.is_debug_build() or true):
 		Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
 #		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 
@@ -70,26 +76,26 @@ func _process(_delta):
 #	print("CAMERA: ", $Camera.get_camera_position())
 	$Sprite.flip_h = (mouse_screen_pos.x < screen_pos.x)
 	
-	if (Input.is_action_just_pressed("R")):
-		if (Input.is_action_pressed("L")):
+	if (Inputs.is_pressed("R")):
+		if (Inputs.is_down("L")):
 			joy_dir = -1
 		else:
 			joy_dir = 1
 	
-	if (Input.is_action_just_pressed("L")):
-		if (Input.is_action_pressed("R")):
+	if (Inputs.is_pressed("L")):
+		if (Inputs.is_down("R")):
 			joy_dir = 1
 		else:
 			joy_dir = -1
 	
-	if (Input.is_action_just_released("L")):
-		if (Input.is_action_pressed("R")):
+	if (Inputs.is_released("L")):
+		if (Inputs.is_down("R")):
 			joy_dir = 1
 		else:
 			joy_dir = 0
 	
-	if (Input.is_action_just_released("R")):
-		if (Input.is_action_pressed("L")):
+	if (Inputs.is_released("R")):
+		if (Inputs.is_down("L")):
 			joy_dir = -1
 		else:
 			joy_dir = 0
@@ -125,13 +131,23 @@ func _physics_process(_delta):
 	if (is_on_ceiling()):
 		bonk_timer_y += 1
 		if (bonk_timer_y == 1):
-			motion.y = 0
+			motion.y *= -0.25
 	else:
 		bonk_timer_y = 0
 	
 	if (is_on_wall()):
 		bonk_timer_x += 1
 		motion.x = 0
+		var collide = get_last_slide_collision()
+		var ang = rad2deg(atan2(collide.normal.y, collide.normal.x))
+		var dir = 1
+		if (ang == 180):
+			dir = -1
+		if ((dir == -1) == $Sprite.flip_h):
+			motion.y = 200
+			if (Input.is_action_just_pressed("JUMP") and (ang == 180 or ang == 0)):
+				motion.y = -JUMP*0.9
+				motion.x = (DASH_SPEED/1.2)*dir
 	else:
 		bonk_timer_x = 0
 	
@@ -145,7 +161,7 @@ func _physics_process(_delta):
 			motion.y = MAX_FALL
 		else:
 			var curr_ff = 0
-			if (Input.is_action_pressed("D")):
+			if (Inputs.is_down("D")):
 				curr_ff = FAST_FALL
 			motion.y += (WEIGHT+curr_ff)
 	#----------------------------------------#
@@ -170,16 +186,18 @@ func _physics_process(_delta):
 		var curr_fric = FRICTION
 		if (dashing):
 			curr_fric = DASH_FRICTION
+		if (!grounded):
+			curr_fric = 1.009
 		if (abs(motion.x) > 0.01):
 			motion.x /= curr_fric
 		else:
 			motion.x = 0
 	
-	if (Input.is_action_just_pressed("JUMP") and jumps > 0):
+	if (Inputs.is_pressed("JUMP") and jumps > 0):
 		motion.y = -JUMP
 		jumps -= 1
 	
-	if (Input.is_action_just_pressed("DASH") and grounded):
+	if (Inputs.is_pressed("DASH") and grounded):
 		motion.x = (DASH_SPEED*last_dir)
 		dashing = true
 	

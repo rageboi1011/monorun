@@ -6,10 +6,12 @@ export var lobby = "" # Will create a new lobby if empty.
 var client: WebSocketClient = WebSocketClient.new()
 var code = 1000
 var reason = "Unknown"
+var connected = false
 
 # MY VARS
 var id = null
 var username = ""
+var lobby_id = null
 
 signal lobby_joined(lobby)
 signal connected(id)
@@ -44,6 +46,7 @@ func close():
 
 func _closed(was_clean = false):
 	emit_signal("disconnected")
+	connected = false
 
 
 func _close_request(code, reason):
@@ -54,6 +57,7 @@ func _close_request(code, reason):
 func _connected(protocol = ""):
 	client.get_peer(1).set_write_mode(WebSocketPeer.WRITE_MODE_TEXT)
 	emit_signal("ws_connect")
+	connected = true
 
 
 func _parse_msg():

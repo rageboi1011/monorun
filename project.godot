@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Node",
+"class": "InputManager",
+"language": "GDScript",
+"path": "res://scripts/class_input_manager.gd"
+} ]
+_global_script_class_icons={
+"InputManager": ""
+}
+
 [application]
 
 config/name="Monorun"
@@ -20,6 +30,7 @@ GlobalVars="*res://scripts/global_vars.gd"
 WsClient="*res://scripts/ws_client.gd"
 MultiClient="*res://scripts/multiplayer.gd"
 MonoBase="*res://scripts/monoBase.gd"
+GlobalInputManager="*res://scripts/GlobalInputManager.gd"
 
 [display]
 
@@ -153,7 +164,7 @@ DASH={
 }
 SHOOT={
 "deadzone": 0.5,
-"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
  ]
 }
 CONFIRM={

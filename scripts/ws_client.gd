@@ -58,17 +58,15 @@ func _connected(protocol = ""):
 
 func _parse_msg():
 	var pkt_str: String = client.get_peer(1).get_packet().get_string_from_utf8()
-	print(pkt_str)
 #	emit_signal("new_data", pkt_str)
 	var index = pkt_str.split(":")
 	var index_type = index[0]
 	index.remove(0)
-	var args = Array(index)
+	var args = Array(index[0].split(","))
 	emit_signal("new_data", index_type, args)
 	match index_type:
 		"I":
 			id = args[0]
-			print("ID ==> ", id)
 			send("SL")
 
 func send(string) -> int:

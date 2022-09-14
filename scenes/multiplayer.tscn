@@ -63,6 +63,16 @@ context_menu_enabled = false
 placeholder_text = "Query..."
 caret_blink = true
 
+[node name="HostButton" type="Button" parent="LobbyList"]
+margin_left = 900.0
+margin_top = 310.0
+margin_right = 1150.0
+margin_bottom = 347.0
+theme = ExtResource( 5 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_fonts/font = ExtResource( 1 )
+text = "Make a Lobby!"
+
 [node name="PlayerInfo" type="Control" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0

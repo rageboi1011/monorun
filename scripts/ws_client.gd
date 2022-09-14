@@ -9,6 +9,7 @@ var reason = "Unknown"
 
 # MY VARS
 var id = null
+var username = ""
 
 signal lobby_joined(lobby)
 signal connected(id)
@@ -57,40 +58,24 @@ func _connected(protocol = ""):
 
 func _parse_msg():
 	var pkt_str: String = client.get_peer(1).get_packet().get_string_from_utf8()
-	emit_signal("new_data", pkt_str)
+	print(pkt_str)
+#	emit_signal("new_data", pkt_str)
 	var index = pkt_str.split(":")
 	var index_type = index[0]
 	index.remove(0)
-	var args = index.join(":")
+	var args = Array(index)
+	emit_signal("new_data", index_type, args)
 	match index_type:
 		"I":
 			id = args[0]
 			print("ID ==> ", id)
+			send("SL")
 
-
-func join_lobby(lobby):
-	return client.get_peer(1).put_packet(("J: %s\n" % lobby).to_utf8())
-
-
-func seal_lobby():
-	return client.get_peer(1).put_packet("S: \n".to_utf8())
-
+func send(string) -> int:
+	return client.get_peer(1).put_packet((string).to_utf8())
 
 func send_candidate(id, mid, index, sdp) -> int:
-	return _send_msg("C", id, "\n%s\n%d\n%s" % [mid, index, sdp])
-
-
-func send_offer(id, offer) -> int:
-	return _send_msg("O", id, offer)
-
-
-func send_answer(id, answer) -> int:
-	return _send_msg("A", id, answer)
-
-
-func _send_msg(type, id, data) -> int:
-	return client.get_peer(1).put_packet(("%s: %d\n%s" % [type, id, data]).to_utf8())
-
+	return send("C:%s\n%s\n%d\n%s" % [id, mid, index, sdp])
 
 func _process(delta):
 	var status: int = client.get_connection_status()

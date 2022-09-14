@@ -42,8 +42,8 @@ func _create_peer(id):
 	return peer
 
 
-func _new_ice_candidate(mid_name, index_name, sdp_name, id):
-	send_candidate(id, mid_name, index_name, sdp_name)
+#func _new_ice_candidate(mid_name, index_name, sdp_name, id):
+#	send_candidate(id, mid_name, index_name, sdp_name)
 
 
 func _offer_created(type, data, id):
@@ -51,8 +51,8 @@ func _offer_created(type, data, id):
 		return
 	print("created", type)
 	rtc_mp.get_peer(id).connection.set_local_description(type, data)
-	if type == "offer": send_offer(id, data)
-	else: send_answer(id, data)
+#	if type == "offer": send_offer(id, data)
+#	else: send_answer(id, data)
 
 
 func connected(id):

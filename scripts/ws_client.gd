@@ -57,6 +57,7 @@ func _close_request(code, reason):
 func _connected(protocol = ""):
 	client.get_peer(1).set_write_mode(WebSocketPeer.WRITE_MODE_TEXT)
 	emit_signal("ws_connect")
+	print("Socket Connected!")
 	connected = true
 
 

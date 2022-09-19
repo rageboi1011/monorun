@@ -5,10 +5,11 @@ var player_obj = preload("res://objects/Player.tscn")
 
 func _ready():
 #	GlobalVars.mood_color = mood_color_override
-	if (!WsClient.connected):
-		var plr = player_obj.instance()
-		plr.type = 0
-		add_child(plr)
+	print(WsClient.connected)
+#	if (!WsClient.connected):
+	var plr = player_obj.instance()
+	plr.type = 0
+	add_child(plr)
 	var players = get_tree().get_nodes_in_group("Player")
 	print(players)
 	for player in players:

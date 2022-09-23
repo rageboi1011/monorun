@@ -76,17 +76,14 @@ func _process(_delta):
 #	print("CAMERA: ", $Camera.get_camera_position())
 	$Sprite.flip_h = (mouse_screen_pos.x < screen_pos.x)
 	
-	if (Inputs.is_pressed("R")):
-		if (Inputs.is_down("L")):
-			joy_dir = -1
-		else:
-			joy_dir = 1
+	if (!Inputs.is_down("L") and !Inputs.is_down("R")):
+		joy_dir = 0
 	
+	if (Inputs.is_pressed("R")):
+		joy_dir = 1
+		
 	if (Inputs.is_pressed("L")):
-		if (Inputs.is_down("R")):
-			joy_dir = 1
-		else:
-			joy_dir = -1
+		joy_dir = -1
 	
 	if (Inputs.is_released("L")):
 		if (Inputs.is_down("R")):

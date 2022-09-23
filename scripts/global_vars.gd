@@ -12,6 +12,8 @@ const MOODS = [
 export var mood_color =  Color(MOODS[0])
 var current_camera = null
 
+onready var tree = get_tree()
+
 func _ready():
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()

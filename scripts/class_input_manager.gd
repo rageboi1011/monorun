@@ -7,6 +7,8 @@ signal released(key)
 
 var type = -1
 
+# Make Player Script more Event-Based to SOLVE EVERY FUCKING PROBLEM ON JAWN
+
 var keys = {
 	"U": 0,
 	"D": 0,
@@ -25,20 +27,42 @@ func _init(t):
 	connect("pressed", self, "_on_pressed")
 	connect("released", self, "_on_released")
 
+func _check():
+	for key in keys:
+		if (keys[key] == 1):
+			keys[key] = 3
+#			print(str(key)+"==>"+str(keys[key]))
+#			print("i:" + str(key) + str(3))
+		if (keys[key] == 2):
+			keys[key] = 0
+#			print(str(key)+"==>"+str(keys[key]))
+#			print("i:" + str(key) + str(0))
+
 func _update(_delta):
 	if (type == 0):
+#		_check()
 		for key in keys:
-			var val = 0
-			if (Input.is_action_pressed(key)):
-				val = 3
+#			var val = 0
+#			if (Input.is_action_pressed(key)):
+#				val = 3
 			if (Input.is_action_just_pressed(key)):
-				val = 1
-				emit_signal("pressed", key)
+#				val = 1
+				keys[key] = 1
+				emit_signal("pressed", key, 1)
+#				print(str(key)+"==>"+str(keys[key]))
+				yield(get_tree(), "idle_frame")
+				if (keys[key] == 1):
+					keys[key] = 3
+#					print(str(key)+"==>"+str(keys[key]))
 			if (Input.is_action_just_released(key)):
-				val = 2
-				emit_signal("released", key)
-			keys[key] = val
-#	print(Inputs.keys)
+#				val = 2
+				keys[key] = 2
+				emit_signal("released", key, 2)
+#				print(str(key)+"==>"+str(keys[key]))
+				yield(get_tree(), "idle_frame")
+				if (keys[key] == 2):
+					keys[key] = 0
+#					print(str(key)+"==>"+str(keys[key]))
 
 func is_pressed(key):
 	return (keys[key] == 1)
@@ -51,25 +75,28 @@ func is_down(key):
 
 func decode(string):
 	var states = Array(string.split(""))
-	var key_names = keys.keys()
-	var i = 0
-	for state in states:
-		keys[key_names[i]] = state
-		i += 1
+	var ind = keys.keys()[states[0]]
+	keys[ind] = states[1]
 
-func encode():
-	var string = PoolStringArray([])
-	for key in keys:
-		string.append(keys[key])
-	return string.join("")
+#func encode():
+#	var string = PoolStringArray([])
+#	for key in keys:
+#		string.append(keys[key])
+#	return string.join("")
 
-func _on_input(key):
+func _on_input(key, state):
 	if (WsClient.connected):
-		var encoded = encode()
-		WsClient.send("i:" + str(encoded))
+#		var encoded = encode()
+		var sock_string = "i:" + str(key) + str(state)
+#		print(sock_string)
+#		print(str(key)+"==>"+str(keys[key]))
+		WsClient.send(sock_string)
 
-func _on_pressed(key):
+func _on_pressed(key, _val):
 	pass
 
-func _on_released(key):
+func _on_released(key, _val):
 	pass
+
+func get_tree():
+	return GlobalVars.tree

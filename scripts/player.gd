@@ -24,9 +24,11 @@ var ground_timer = 0
 var bonk_timer_y = 0
 var bonk_timer_x = 0
 var free_timer = 0
+var jump_pending = false
 var jump_buffer = 0
 var max_jumps = 1
 var jumps = max_jumps
+var dash_pending = false
 var dashing = false
 var dash_buffer = 0
 var joy_dir = 0
@@ -58,6 +60,9 @@ func spawn_trail():
 		sprite.queue_free()
 
 func _ready():
+	Inputs.connect("pressed", self, "_input_press")
+	Inputs.connect("released", self, "_input_release")
+	
 	if (type == 0):
 		$Camera.current = true
 		GlobalVars.current_camera = $Camera
@@ -67,6 +72,28 @@ func _ready():
 		Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
 #		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 
+func _input_press(key):
+	if (key == "R"):
+		joy_dir = 1
+	if (key == "L"):
+		joy_dir = -1
+	if (key == "JUMP"):
+		jump_pending = true
+	if (key == "DASH"):
+		dash_pending = true
+
+func _input_release(key):
+	if (key == "R"):
+		if (!Inputs.is_down("L")):
+			joy_dir = 0
+		else:
+			joy_dir = -1
+	if (key == "L"):
+		if (!Inputs.is_down("R")):
+			joy_dir = 0
+		else:
+			joy_dir = 1
+
 func _got_trail_cont(trail_cont):
 	TRAIL_CONT = trail_cont
 
@@ -75,27 +102,6 @@ func _process(_delta):
 	var screen_pos = get_transform().get_origin()
 #	print("CAMERA: ", $Camera.get_camera_position())
 	$Sprite.flip_h = (mouse_screen_pos.x < screen_pos.x)
-	
-	if (!Inputs.is_down("L") and !Inputs.is_down("R")):
-		joy_dir = 0
-	
-	if (Inputs.is_pressed("R")):
-		joy_dir = 1
-		
-	if (Inputs.is_pressed("L")):
-		joy_dir = -1
-	
-	if (Inputs.is_released("L")):
-		if (Inputs.is_down("R")):
-			joy_dir = 1
-		else:
-			joy_dir = 0
-	
-	if (Inputs.is_released("R")):
-		if (Inputs.is_down("L")):
-			joy_dir = -1
-		else:
-			joy_dir = 0
 	
 	if (joy_dir != 0):
 		last_dir = joy_dir
@@ -190,13 +196,17 @@ func _physics_process(_delta):
 		else:
 			motion.x = 0
 	
-	if (Inputs.is_pressed("JUMP") and jumps > 0):
-		motion.y = -JUMP
-		jumps -= 1
+	if (jump_pending):
+		jump_pending = false
+		if (jumps > 0):
+			motion.y = -JUMP
+			jumps -= 1
 	
-	if (Inputs.is_pressed("DASH") and grounded):
-		motion.x = (DASH_SPEED*last_dir)
-		dashing = true
+	if (dash_pending):
+		dash_pending = false
+		if (grounded):
+			motion.x = (DASH_SPEED*last_dir)
+			dashing = true
 	
 	if (abs(motion.x) < SPEED and grounded):
 		dashing = false

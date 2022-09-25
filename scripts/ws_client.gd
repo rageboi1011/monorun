@@ -12,6 +12,7 @@ var connected = false
 var id = null
 var username = ""
 var lobby_id = null
+var ping = 80
 
 signal lobby_joined(lobby)
 signal connected(id)

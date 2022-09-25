@@ -84,6 +84,7 @@ margin_right = 950.0
 margin_bottom = 397.0
 theme = ExtResource( 5 )
 custom_styles/normal = SubResource( 2 )
+max_length = 10
 context_menu_enabled = false
 placeholder_text = "Nickname..."
 caret_blink = true

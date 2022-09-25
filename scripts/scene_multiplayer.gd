@@ -29,6 +29,8 @@ func _ws_data(type, args):
 					var temp = LobbyTemplate.instance()
 					var title_label = temp.get_node("Title")
 					title_label.text = lobby[0]
+					var join_button = temp.get_node("JoinButton")
+					join_button.connect("pressed", self, "_join_lobby", lobby)
 					$LobbyList/Container.add_child(temp)
 			else:
 				pass
@@ -38,6 +40,9 @@ func _ws_data(type, args):
 
 func _host_lobby():
 	WsClient.send("HL:%s's Lobby"%[WsClient.username])
+
+func _join_lobby(title, id):
+	WsClient.send("J:%s" % id)
 
 func _process(_delta):
 	material.set_shader_param("MOOD_COLOR", GlobalVars.mood_color)

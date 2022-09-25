@@ -17,7 +17,7 @@ margin_top = 50.0
 margin_right = 760.0
 margin_bottom = 55.0
 
-[node name="Button" type="Button" parent="."]
+[node name="JoinButton" type="Button" parent="."]
 margin_left = 695.0
 margin_right = 765.0
 margin_bottom = 37.0

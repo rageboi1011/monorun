@@ -70,7 +70,9 @@ func _parse_msg():
 	var index = pkt_str.split(":")
 	var index_type = index[0]
 	index.remove(0)
-	var args = Array(index[0].split(","))
+	var args = []
+	if (index.size() > 0):
+		args = Array(index[0].split(","))
 	emit_signal("new_data", index_type, args)
 	match index_type:
 		"I":

@@ -9,6 +9,8 @@ const MOODS = [
 	"172808",
 ]
 
+var temp_plr_info
+
 export var mood_color =  Color(MOODS[0])
 var current_camera = null
 

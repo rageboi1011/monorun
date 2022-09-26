@@ -37,6 +37,15 @@ func _ws_data(type, args):
 		"HL":
 			print("Lobby created!")
 			get_tree().change_scene("res://scenes/test.tscn")
+		"L":
+			print("Got lobby info!")
+			
+			for player_info in args:
+				player_info = Array(player_info.split("|"))
+				GlobalVars.temp_plr_info.append({"id": player_info[1], "x": player_info[2], "y": player_info[3]})
+				WsClient.players.append({"id": player_info[1], "nick": player_info[0]})
+			
+			get_tree().change_scene("res://scenes/test.tscn")
 
 func _host_lobby():
 	WsClient.send("HL:%s's Lobby"%[WsClient.username])

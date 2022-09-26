@@ -3,13 +3,22 @@ extends Node2D
 export var mood_color_override = Color(0,0,0)
 var player_obj = preload("res://objects/Player.tscn")
 
+var client_player = null
+
 func _ready():
+	WsClient.connect("new_data", self, "_ws_data")
 #	GlobalVars.mood_color = mood_color_override
 	print(WsClient.connected)
 #	if (!WsClient.connected):
-	var plr = player_obj.instance()
-	plr.type = 0
-	add_child(plr)
+	client_player = player_obj.instance()
+	client_player.type = 0
+	add_child(client_player)
+	
+	for player in WsClient.players:
+		var other_plr = player_obj.instance()
+		other_plr.type = 1
+		add_child(other_plr)
+	
 	var players = get_tree().get_nodes_in_group("Player")
 	print(players)
 	for player in players:
@@ -24,8 +33,11 @@ func _ready():
 func _ws_connected():
 	add_line("CONNECTED!")
 
-func _ws_data(msg):
-	add_line(msg)
+func _ws_data(type, args):
+#	add_line(msg)
+	match type:
+		"P":
+			WsClient.send("P:"+str(MonoBase.fromDec(client_player.x))+","+str(MonoBase.fromDec(client_player.y)))
 
 func _process(delta):
 	material.set_shader_param("MOOD_COLOR", GlobalVars.mood_color)

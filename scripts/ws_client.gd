@@ -14,6 +14,8 @@ var username = ""
 var lobby_id = null
 var ping = 80
 
+var players = []
+
 signal lobby_joined(lobby)
 signal connected(id)
 signal disconnected()

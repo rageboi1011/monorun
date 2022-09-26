@@ -89,7 +89,7 @@ func toDec(enc):
 	return int(sum)
 
 func _cut(state, base):
-	var mod = state % base
+	var mod = int(fmod(state, base) )
 	state = int(floor(state / base))
 	return [state, TABLEflip[mod]]
 

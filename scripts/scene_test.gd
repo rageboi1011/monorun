@@ -37,7 +37,7 @@ func _ws_data(type, args):
 #	add_line(msg)
 	match type:
 		"P":
-			WsClient.send("P:"+str(MonoBase.fromDec(client_player.x))+","+str(MonoBase.fromDec(client_player.y)))
+			WsClient.send("P:"+str(MonoBase.fromDec(client_player.position.x))+","+str(MonoBase.fromDec(client_player.position.y)))
 
 func _process(delta):
 	material.set_shader_param("MOOD_COLOR", GlobalVars.mood_color)

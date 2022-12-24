@@ -120,7 +120,7 @@ position = Vector2( 640, 0 )
 collision_mask = 2
 collision/safe_margin = 5.0
 script = ExtResource( 2 )
-COLOR = Color( 0.713726, 0.0705882, 0.94902, 1 )
+COLOR = Color( 0.0705882, 0.94902, 0.392157, 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
 use_parent_material = true

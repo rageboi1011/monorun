@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://misc/DEFAULT FONT.tres" type="DynamicFont" id=1]
 [ext_resource path="res://sprites/multiplayer_layout.png" type="Texture" id=2]
@@ -22,33 +22,6 @@ expand_margin_left = 5.0
 expand_margin_right = 5.0
 expand_margin_top = 5.0
 expand_margin_bottom = 3.0
-
-[sub_resource type="Animation" id=3]
-resource_name = "StartAnim"
-tracks/0/type = "value"
-tracks/0/path = NodePath("Nickname:rect_position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.3, 0.4 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 1,
-"values": [ Vector2( 240, 400 ), Vector2( 315, 350 ), Vector2( 290, 350 ) ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("Label:rect_position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.2, 0.3, 0.5 ),
-"transitions": PoolRealArray( 1, 1, 1, 1 ),
-"update": 1,
-"values": [ Vector2( 265, 334 ), Vector2( 265, 334 ), Vector2( 302, 309 ), Vector2( 290, 309 ) ]
-}
 
 [node name="Node2D" type="Node2D"]
 material = SubResource( 1 )
@@ -106,10 +79,10 @@ margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="Nickname" type="LineEdit" parent="PlayerInfo"]
-margin_left = 240.0
-margin_top = 400.0
-margin_right = 900.0
-margin_bottom = 447.0
+margin_left = 290.0
+margin_top = 350.0
+margin_right = 950.0
+margin_bottom = 397.0
 theme = ExtResource( 5 )
 custom_styles/normal = SubResource( 2 )
 max_length = 10
@@ -118,16 +91,12 @@ placeholder_text = "Nickname..."
 caret_blink = true
 
 [node name="Label" type="Label" parent="PlayerInfo"]
-margin_left = 265.0
-margin_top = 334.0
-margin_right = 905.0
-margin_bottom = 371.0
+margin_left = 290.0
+margin_top = 309.0
+margin_right = 930.0
+margin_bottom = 346.0
 custom_fonts/font = ExtResource( 1 )
 text = "You need a nickname to join a lobby"
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerInfo"]
-autoplay = "StartAnim"
-anims/StartAnim = SubResource( 3 )
 
 [node name="Crosshair" type="Sprite" parent="."]
 texture = ExtResource( 3 )

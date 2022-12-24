@@ -10,6 +10,7 @@ var LobbyTemplate = preload("res://objects/LobbyTemplate.tscn")
 
 func _ready():
 	WsClient.connect_to_url("wss://MonorunSignalingServer.donovanedwards.repl.co")
+#	WsClient.connect_to_url("ws://localhost:2022/")
 	WsClient.connect("ws_connect", self, "_ws_connected")
 	WsClient.connect("new_data", self, "_ws_data")
 	
@@ -39,6 +40,7 @@ func _ws_data(type, args):
 			get_tree().change_scene("res://scenes/test.tscn")
 		"L":
 			print("Got lobby info!")
+			print(args)
 			
 			for player_info in args:
 				player_info = Array(player_info.split("|"))

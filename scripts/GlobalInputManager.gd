@@ -1,7 +1,13 @@
 extends Node
 
-var managers = []
+const LAST_DELTA = (1.0/60.0)
 
-func _process(delta):
-	for manager in managers:
+var managers = {}
+
+func _physics_process(delta):
+	var curr_fps = round(1.0/delta)
+	if (curr_fps != 60):
+		print("FRAME DROP! FPS: %s" % curr_fps)
+	for id in managers:
+		var manager = managers[id]
 		manager._update(delta)
